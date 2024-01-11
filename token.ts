@@ -1,9 +1,9 @@
 export enum TokenType {
     //parens, braces
-    PAREN_LEFT,
-    PAREN_RIGHT,
-    BRACE_LEFT,
-    BRACE_RIGHT,
+    PAREN_L,
+    PAREN_R,
+    BRACE_L,
+    BRACE_R,
     //operators
     PLUS,
     MINUS,
