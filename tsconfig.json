@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "outDir": "./dist",
+        "removeComments": false,
+        "target": "ESNext",
+        "declaration": true,
+        "lib": [
+            "ESNext"
+        ]
+    },
+    "files": [
+        "token.ts"
+    ]
+}
