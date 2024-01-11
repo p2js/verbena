@@ -4,6 +4,8 @@ export enum TokenType {
     PAREN_R,
     BRACE_L,
     BRACE_R,
+    //abs pipe
+    PIPE,
     //operators
     PLUS,
     MINUS,
@@ -16,21 +18,19 @@ export enum TokenType {
     GREATER_EQUAL,
     LESS,
     LESS_EQUAL,
+    //comma (fn args)
+    COMMA,
     //literal
     NUMBER,
-    IDENTIFIER,
-    //end
-    END
+    IDENTIFIER
 }
 
 export class Token {
     type: TokenType;
     lexeme: string;
-    literal: any;
 
-    constructor(type: TokenType, lexeme: string, literal?: any) {
+    constructor(type: TokenType, lexeme: string) {
         this.type = type;
         this.lexeme = lexeme;
-        this.literal = literal || null;
     }
 }
