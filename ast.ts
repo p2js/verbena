@@ -7,11 +7,11 @@ export class FnDecl {
 export abstract class Expr { };
 
 export class AbsGrouping extends Expr {
-    constructor(public expr: Expr) { super(); }
+    constructor(public inner: Expr) { super(); }
 }
 
 export class Grouping extends Expr {
-    constructor(public expr: Expr) { super(); }
+    constructor(public inner: Expr) { super(); }
 }
 
 export class Literal extends Expr {
@@ -23,7 +23,7 @@ export class FnCall extends Expr {
 }
 
 export class Unary extends Expr {
-    constructor(public operator: Token, public expr: Expr) { super(); };
+    constructor(public operator: Token, public inner: Expr) { super(); };
 }
 
 export class Binary extends Expr {
