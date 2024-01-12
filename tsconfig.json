@@ -9,6 +9,8 @@
     },
     "files": [
         "token.ts",
-        "lexer.ts"
+        "lexer.ts",
+        "ast.ts",
+        "parser.ts"
     ]
 }
