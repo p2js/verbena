@@ -95,10 +95,25 @@ export function parse(tokenStream: Token[]) {
     function factor() {
         let left = exponent();
 
-        while (match(TokenType.STAR, TokenType.SLASH)) {
-            let operator = previous();
-            let right = exponent();
-            left = new AST.Binary(left, operator, right);
+
+        //match for explicit multiplication/division tokens and implicit multiplication by primary types
+        while (match(TokenType.STAR, TokenType.SLASH, TokenType.NUMBER, TokenType.IDENTIFIER, TokenType.CONSTANT, TokenType.PAREN_L, /*TokenType.PIPE,*/ TokenType.FUNCTION)) {
+            let token = previous();
+            switch (token.type) {
+                case TokenType.STAR:
+                case TokenType.SLASH:
+                    left = new AST.Binary(left, token, exponent());
+                    break;
+                case TokenType.NUMBER:
+                case TokenType.IDENTIFIER:
+                case TokenType.CONSTANT:
+                case TokenType.PAREN_L:
+                //case TokenType.PIPE:
+                case TokenType.FUNCTION:
+                    currentToken--;
+                    left = new AST.Binary(left, new Token(TokenType.STAR, '*'), exponent());
+                    break;
+            }
         }
 
         return left;
