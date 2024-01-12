@@ -1,14 +1,15 @@
 import { Token, TokenType } from './token';
 
-const reservedIdentifiers = [
-    //functions
+const reservedFunctions = [
     'abs', 'acos', 'acosh', 'asin', 'asinh', 'atan', 'atanh',
     'cbrt', 'ceil', 'cos', 'cosh', 'exp', 'floor', 'hypot',
     'log', 'ln', 'max', 'min', 'pow', 'random', 'round',
     'sign', 'sin', 'sinh', 'sqrt', 'tan', 'tanh',
-    //constants
-    'pi', 'e'
 ];
+
+const reservedConstants = [
+    'pi', 'e'
+]
 
 function isDigit(c: string) {
     return c >= '0' && c <= '9';
@@ -95,8 +96,10 @@ export function scan(source: string): Token[] {
                         advance();
                     }
                     let chunk = source.substring(start, current);
-                    if (reservedIdentifiers.includes(chunk)) {
-                        addToken(TokenType.IDENTIFIER, chunk);
+                    if (reservedFunctions.includes(chunk)) {
+                        addToken(TokenType.FUNCTION, chunk);
+                    } else if (reservedConstants.includes(chunk)) {
+                        addToken(TokenType.CONSTANT, chunk)
                     } else {
                         chunk.split('').forEach((ident) => {
                             tokens.push(new Token(TokenType.IDENTIFIER, ident))

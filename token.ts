@@ -22,6 +22,8 @@ export enum TokenType {
     COMMA,
     //literal
     NUMBER,
+    FUNCTION,
+    CONSTANT,
     IDENTIFIER
 }
 
