@@ -28,11 +28,5 @@ export enum TokenType {
 }
 
 export class Token {
-    type: TokenType;
-    lexeme: string;
-
-    constructor(type: TokenType, lexeme: string) {
-        this.type = type;
-        this.lexeme = lexeme;
-    }
+    constructor(public type: TokenType, public lexeme: string) { }
 }
