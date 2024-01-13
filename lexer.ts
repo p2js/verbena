@@ -1,15 +1,6 @@
 import { Token, TokenType } from './token';
 
-const reservedFunctions = [
-    'abs', 'acos', 'acosh', 'asin', 'asinh', 'atan', 'atanh',
-    'cbrt', 'ceil', 'cos', 'cosh', 'exp', 'floor', 'hypot',
-    'log', 'ln', 'max', 'min', 'pow', 'random', 'round',
-    'sign', 'sin', 'sinh', 'sqrt', 'tan', 'tanh',
-];
-
-const reservedConstants = [
-    'pi', 'e'
-]
+import { standard, Library } from './lib';
 
 function isDigit(c: string) {
     return c >= '0' && c <= '9';
@@ -19,7 +10,10 @@ function isLetter(c: string) {
     return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
 }
 
-export function scan(source: string): Token[] {
+export function scan(source: string, lib: Library = standard): Token[] {
+    let reservedConstants = Object.keys(lib.constants);
+    let reservedFunctions = Object.keys(lib.functions);
+
     let tokens: Token[] = [];
 
     let current = 0;  //current character
