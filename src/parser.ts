@@ -8,7 +8,7 @@ import * as AST from './ast';
 
      expression -> term
            term -> factor (("+" | "-") factor)*
-         factor -> exponent (("*" | "/") exponent)*
+         factor -> exponent ((("*"? | "/") exponent)*
        exponent -> (unary ^)* unary;
           unary -> ("-" unary) | primary;
 

@@ -10,10 +10,10 @@
         ]
     },
     "files": [
-        "token.ts",
-        "ast.ts",
-        "lib.ts",
-        "lexer.ts",
-        "parser.ts"
+        "src/token.ts",
+        "src/ast.ts",
+        "src/lib.ts",
+        "src/lexer.ts",
+        "src/parser.ts"
     ]
 }
