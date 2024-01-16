@@ -9,11 +9,7 @@
             "ESNext"
         ]
     },
-    "files": [
-        "src/token.ts",
-        "src/ast.ts",
-        "src/lib.ts",
-        "src/lexer.ts",
-        "src/parser.ts"
+    "include": [
+        "src/**/*.ts"
     ]
 }
