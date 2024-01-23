@@ -2,30 +2,37 @@ import { Token, TokenType } from './token';
 import * as AST from './ast';
 
 /*
-    Ideal math grammar defined like so:
+The ideal math grammar could be defined like so:
 
-    fnDeclaration -> IDENTIFIER "(" IDENTIFIER ("," IDENTIFIER)* ")" "=" expression
+fnDeclaration -> IDENTIFIER "(" IDENTIFIER ("," IDENTIFIER)* ")" "=" expression
+   expression -> term
+         term -> factor (("+" | "-") factor)*
+       factor -> exponent ((("*"? | "/") exponent)*
+     exponent -> (unary ^)* unary;
+        unary -> ("-" unary) | primary;
 
-     expression -> term
-           term -> factor (("+" | "-") factor)*
-         factor -> exponent ((("*"? | "/") exponent)*
-       exponent -> (unary ^)* unary;
-          unary -> ("-" unary) | primary;
+      primary -> IDENTIFIER | NUMBER | RESERVED_CONSTANT | group | fn
 
-        primary -> IDENTIFIER | NUMBER | RESERVED_CONSTANT | group | fn
+        group -> grouping | absGrouping
+     grouping -> "(" expression ")"
+  absGrouping -> "|" expression "|"
 
-          group -> grouping | absGrouping
-       grouping -> "(" expression ")"
-    absGrouping -> "|" expression "|"
+            fn -> RESERVED_FUNCTION "(" expression (',' expression)* ")"
 
-             fn -> RESERVED_FUNCTION "(" expression (',' expression)* ")"
+However, this grammar is ambiguous when you combine 
+absolute value groupings with implicit multiplication.
 
+Consider the case |a|b|c|. This can either be parsed as |a|*b*|c|, or |(a*|b|*c)|.
 
-    Verbena's grammar only differs in that it doesn't allow immediately nested absolute value implicit multiplication.
-    Expressions like this are disallowed, and * signs must be inserted:
-    |2|3||
-    ||2|3|
+Additionally, you'd need essentially infinite lookahead to be able to left-to-right parse an
+expression like |a|b||, since it's impossible to know when getting to the second | whether
+it opens a new grouping or closes the current one.
 
+Verbena's grammar solves this ambiguity, and keeps the grammar LL(k) (and the parser efficient)
+by disallowing immediately nested absolute value implicit multiplication.
+Expressions like this are disallowed, and * signs must be inserted:
+|2|3||
+||2|3|
 */
 
 export function parse(tokenStream: Token[]) {
