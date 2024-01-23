@@ -1,5 +1,5 @@
 import * as AST from './ast';
-import { Token, TokenType } from './token';
+import { TokenType } from './token';
 import { standard, Library } from './lib';
 
 class StandardExprHandler {
@@ -57,12 +57,12 @@ class StandardExprHandler {
     }
 
     handleUnary(node: AST.Unary): string {
-        return '(' + node.operator.lexeme + this.compileExpr(node.inner) + ')';
+        return node.operator.lexeme + this.compileExpr(node.inner);
     }
 
     handleBinary(node: AST.Binary): string {
         let operator = node.operator.type == TokenType.CARAT ? '**' : node.operator.lexeme;
-        return '(' + this.compileExpr(node.left) + operator + this.compileExpr(node.right) + ')';
+        return this.compileExpr(node.left) + operator + this.compileExpr(node.right);
     }
 }
 
