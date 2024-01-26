@@ -2,22 +2,23 @@ import { Token, TokenType } from './token';
 import * as AST from './ast';
 
 /*
-The ideal math grammar could be defined like so:
+The ideal function definition grammar could be defined like so:
 
-fnDeclaration -> IDENTIFIER "(" IDENTIFIER ("," IDENTIFIER)* ")" "=" expression
-   expression -> term
-         term -> factor (("+" | "-") factor)*
-       factor -> exponent ((("*"? | "/") exponent)*
-     exponent -> (unary ^)* unary;
-        unary -> ("-" unary) | primary;
+fnDefinition -> IDENTIFIER "(" IDENTIFIER ("," IDENTIFIER)* ")" "=" expression clause?
 
-      primary -> IDENTIFIER | NUMBER | RESERVED_CONSTANT | group | fn
+      clause -> "{" logicalExpr (',' logicalExpr)* "}"
+ logicalExpr -> expression ((">" | ">=" | "<" | "<" | "=") expression)+
 
-        group -> grouping | absGrouping
-     grouping -> "(" expression ")"
-  absGrouping -> "|" expression "|"
-
-            fn -> RESERVED_FUNCTION "(" expression (',' expression)* ")"
+  expression -> term
+        term -> factor (("+" | "-") factor)*
+      factor -> exponent ((("*"? | "/") exponent)*
+    exponent -> (unary ^)* unary;
+       unary -> ("-" unary) | primary;
+     primary -> IDENTIFIER | NUMBER | RESERVED_CONSTANT | group | fn
+       group -> grouping | absGrouping
+    grouping -> "(" expression ")"
+ absGrouping -> "|" expression "|"
+           fn -> RESERVED_FUNCTION "(" expression (',' expression)* ")"
 
 However, this grammar is ambiguous when you combine 
 absolute value groupings with implicit multiplication.
@@ -72,7 +73,7 @@ export function parse(tokenStream: Token[]) {
     //conditional advance, else error
     let expect = (type: TokenType, message: string) => {
         if (check(type)) return advance();
-        throw Error('[' + peek().lexeme + '] ' + message);
+        throw Error('[' + (peek()?.lexeme || 'end') + '] ' + message);
     }
 
     // GRAMMAR IMPLEMENTATION
@@ -94,7 +95,35 @@ export function parse(tokenStream: Token[]) {
 
         let body = expression();
 
-        return new AST.FnDecl(ident, params, body);
+        let clauses = [];
+
+        if (match(TokenType.BRACE_L)) {
+            do {
+                clauses.push(logicalExpr());
+            } while (match(TokenType.COMMA));
+            expect(TokenType.BRACE_R, 'Expected \'}\' after function clause list');
+        }
+
+        let nextLexeme = peek()?.lexeme
+        if (nextLexeme) throw new Error("Unexpected token " + nextLexeme);
+
+        return new AST.FnDecl(ident, params, body, clauses);
+    }
+
+    function logicalExpr() {
+        let left = expression();
+
+        if (!match(TokenType.GREATER, TokenType.GREATER_EQUAL, TokenType.LESS, TokenType.LESS_EQUAL, TokenType.EQUAL)) {
+            throw Error("A function domain clause must have at least one condition");
+        }
+
+        do {
+            let operator = previous();
+            let right = expression();
+            left = new AST.LogicalExpr(left, operator, right);
+        } while (match(TokenType.GREATER, TokenType.GREATER_EQUAL, TokenType.LESS, TokenType.LESS_EQUAL, TokenType.EQUAL));
+
+        return left;
     }
 
     function expression() {
@@ -215,8 +244,15 @@ export function parse(tokenStream: Token[]) {
 
             return new AST.FnCall(ident, args);
         }
+
         //unexpected token
-        throw Error("Unexpected token " + peek().lexeme);
+        let token = peek()?.lexeme;
+        if (token) {
+            throw Error("Unexpected token " + token);
+        } else {
+            throw Error("Unexpected end of input");
+        }
+
     }
 
     return declaration();
