@@ -19,6 +19,8 @@ class StandardExprHandler {
                 return this.handleUnary(node);
             case node instanceof AST.Binary:
                 return this.handleBinary(node);
+            case node instanceof AST.LogicalExpr:
+                return this.handleLogicalExpr(node);
         }
         //should be unreachable, exclamation marks for debug purposes
         return '!!!';
@@ -64,13 +66,33 @@ class StandardExprHandler {
         let operator = node.operator.type == TokenType.CARAT ? '**' : node.operator.lexeme;
         return this.compileExpr(node.left) + operator + this.compileExpr(node.right);
     }
-}
 
+    handleLogicalExpr(node: AST.LogicalExpr): string {
+        let left = this.compileExpr(node.left);
+
+        let operator = node.operator.type == TokenType.EQUAL ? '==' : node.operator.lexeme;
+
+        let right = operator + this.compileExpr(node.right);
+
+        if (node.left instanceof AST.LogicalExpr) {
+            right = '&&' + this.compileExpr(node.left.right) + right;
+        }
+
+        return left + right;
+    }
+}
 
 export function compileFn(decl: AST.FnDecl, lib: Library = standard) {
     let paramList = decl.params.map(token => token.lexeme);
 
-    let fnBody = 'return ' + new StandardExprHandler(lib, paramList).compileExpr(decl.body) + ';';
+    let handler = new StandardExprHandler(lib, paramList);
+
+    let fnBody = 'return ' + handler.compileExpr(decl.body) + ';';
+
+    if (decl.clauses.length != 0) {
+        let condition = decl.clauses.map(clause => handler.compileExpr(clause)).join('&&');
+        fnBody = 'if(' + condition + '){' + fnBody + '}else{return undefined;}'
+    }
 
     let output = new Function(...paramList, fnBody);
 
