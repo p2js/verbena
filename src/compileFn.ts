@@ -1,6 +1,7 @@
 import * as AST from './ast';
 import { TokenType } from './token';
 import { standard, Library } from './lib';
+import { vbFunction } from './function';
 
 class StandardExprHandler {
     constructor(public lib: Library = standard, public paramList: string[]) { }
@@ -82,7 +83,7 @@ class StandardExprHandler {
     }
 }
 
-export function compileFn(decl: AST.FnDecl, lib: Library = standard) {
+export function compileFn(decl: AST.FnDecl, lib: Library = standard): vbFunction {
     let paramList = decl.params.map(token => token.lexeme);
 
     let handler = new StandardExprHandler(lib, paramList);
@@ -94,7 +95,24 @@ export function compileFn(decl: AST.FnDecl, lib: Library = standard) {
         fnBody = 'if(' + condition + '){' + fnBody + '}else{return undefined;}'
     }
 
-    let output = new Function(...paramList, fnBody);
+    let fn = new Function(...paramList, fnBody) as vbFunction;
+    Object.defineProperties(fn, {
+        name: {
+            value: decl.ident.lexeme,
+            writable: false,
+            enumerable: false
+        },
+        ast: {
+            value: decl,
+            writable: false,
+            enumerable: false
+        },
+        paramList: {
+            value: paramList,
+            writable: false,
+            enumerable: false,
+        }
+    });
 
-    return output;
+    return fn;
 };
