@@ -1,0 +1,16 @@
+{
+    //This tsconfig.json file is used to generate the .d.ts files for the library.
+    "compilerOptions": {
+        "target": "ESNext",
+        "removeComments": false,
+        "lib": [
+            "ESNext"
+        ],
+        "outDir": "./lib/types",
+        "declaration": true,
+        "emitDeclarationOnly": true
+    },
+    "include": [
+        "src/**/*.ts"
+    ]
+}

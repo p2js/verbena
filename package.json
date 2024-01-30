@@ -1,0 +1,40 @@
+{
+  "name": "verbena",
+  "version": "0.1.0",
+  "description": "Math function/expression library that transcompiles to native code",
+  "author": "Alfio (https://github.com/p2js)",
+  "license": "MIT",
+  "main": "index.js",
+  "files": [
+    "lib"
+  ],
+  "exports": {
+    ".": {
+      "import": "./lib/esm/index.mjs",
+      "require": "./lib/cjs/index.js",
+      "types": "./lib/types/index.d.ts"
+    },
+    "./*": {
+      "import": "./lib/esm/*.mjs",
+      "require": "./lib/cjs/*.js",
+      "types": "./lib/types/*.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "node esbuild.mjs && tsc -b ./tsconfig.types.json",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/p2js/verbena.git"
+  },
+  "keywords": [
+    "math",
+    "functions",
+    "expressions",
+    "mathjs"
+  ],
+  "devDependencies": {
+    "esbuild": "^0.20.0"
+  }
+}
