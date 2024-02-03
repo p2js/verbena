@@ -12,7 +12,7 @@ Verbena is a math/algebra library built in TypeScript. It aims to provide an end
 You can install verbena using [npm](https://www.npmjs.org/package/verbena):
 
 ```sh
-npm install mathjs
+npm install verbena
 ```
 
 Otherwise, you can build the library yourself by cloning into this repository, installing the required build dependencies with `npm i` and then running the build script with `npm run build`.
