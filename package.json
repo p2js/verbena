@@ -6,18 +6,19 @@
   "license": "MIT",
   "main": "index.js",
   "files": [
-    "lib"
+    "lib",
+    "README.md"
   ],
   "exports": {
     ".": {
+      "types": "./lib/types/index.d.ts",
       "import": "./lib/esm/index.mjs",
-      "require": "./lib/cjs/index.js",
-      "types": "./lib/types/index.d.ts"
+      "require": "./lib/cjs/index.js"
     },
     "./*": {
+      "types": "./lib/types/*.d.ts",
       "import": "./lib/esm/*.mjs",
-      "require": "./lib/cjs/*.js",
-      "types": "./lib/types/*.d.ts"
+      "require": "./lib/cjs/*.js"
     }
   },
   "scripts": {

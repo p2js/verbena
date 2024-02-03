@@ -95,7 +95,7 @@ export function parse(tokenStream: Token[]) {
 
         let body = expression();
 
-        let clauses = [];
+        let clauses: AST.LogicalExpr[] = [];
 
         if (match(TokenType.BRACE_L)) {
             do {
