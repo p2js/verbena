@@ -29,11 +29,11 @@ fn(2, -1); // 8
 
 ## Extensibility
 
-Verbena is designed to be easily extended with custom features that interact wi.
+Verbena is designed to be easily extended with custom features.
 
 ### Custom libraries
 
-Function compilation will use the built-in `standard` library by default. This library exposes a variety of functions and constants found in the standard javascript Math object (eg `Math.sin()` and `Math.PI` as `sin()` and `pi` respectively).
+Function compilation will use the built-in `standard` library by default. This library exposes a variety of functions and constants found in the standard javascript Math object (eg. `Math.sin()` and `Math.PI` as `sin()` and `pi` respectively).
 
 If you want to provide some custom functions and constants, or override some of the standard ones, you can make your own library object with those properties (note that libraries must return valid javascript as a string in order to work properly).
 
@@ -65,9 +65,9 @@ let customLibFn = vb.Function("f(x)=double(root*x)", { lib: customLib });
 
 ### Custom components
 
-Sometimes, the standard provided function components (such as the standard tokenizer or parser) may not provide the functionality needed for a project. For example, a rich HTML text input capable of producing a verbena AST directly would benefit from overcoming some of the limitations of plain text.
+Sometimes, the standard provided function components (such as the standard tokenizer or parser) may not provide the functionality needed for a project. For example, a rich HTML text input capable of producing a verbena AST directly would benefit from overcoming some of the limitations of plain text strings.
 
-If you want to write your own components to plug into the verbena ecosystem, you can easily import individual components required to build functions:
+If you want to write your own components to plug into the verbena ecosystem, you can easily import individual parts required to build functions:
 
 ```ts
 // Custom parse function example (in typescript)
@@ -94,11 +94,11 @@ Verbena aims to handle math notation as completely as feasibly possible in plain
 
 ### Ambiguities in mathematical notation
 
-The standard parser supports both implicit multiplication of tokens and groupings (`2.2xy(x)` desugars to `2.2*x*y*(x)`) as well as representing absolute value groupings with the `|` character (`|x|` desugars to `abs(x)`). 
+The standard parser supports implicit multiplication of tokens and groupings (`2.2xy(x)` desugars to `2.2*x*y*(x)`) as well as representing absolute value groupings with the `|` character (`|x|` desugars to `abs(x)`). 
 
-Combining these two facts leads to an ambiguity. Consider the case `|a|b|c|`. This can either be parsed as `|a|*b*|c|`, or `|(a*|b|*c)|`.
+Combining these two features leads to an ambiguity: Consider the case `|a|b|c|`. This can either be parsed as `|a|*b*|c|`, or `|(a*|b|*c)|`.
 
-Additionally, in a case like `|a|b||`, the parser would need infinite lookahead to determine whether the second `|` is closing the current grouping or opening another one. 
+Additionally, in a case like `|a|b||`, a left-to-right parser would need infinite lookahead to determine whether the second `|` is closing the current grouping or opening another one. 
 
 Verbena's parser solves this ambiguity and maintains efficiency by disallowing immediately nested absolute value implicit multiplication. This means `|a|b|c|` will parse as `|a|*b*|c|`. Additionally, expressions like `|2|3||` and `||2|3|` are disallowed, and `*` signs must be inserted. 
 
