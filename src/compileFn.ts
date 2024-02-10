@@ -55,7 +55,8 @@ class StandardExprHandler {
     }
 
     handleAbsGrouping(node: AST.AbsGrouping): string {
-        return 'Math.abs(' + this.compileExpr(node.inner) + ')';
+        let absFn = this.lib.functions.abs ? 'lib.functions.abs(' : 'Math.abs(';
+        return absFn + this.compileExpr(node.inner) + ')';
     }
 
     handleUnary(node: AST.Unary): string {
