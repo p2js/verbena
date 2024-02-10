@@ -35,9 +35,9 @@ Verbena is designed to be easily extended with custom features.
 
 Function compilation will use the built-in `standard` library by default. This library exposes a variety of functions and constants found in the standard javascript Math object (eg. `Math.sin()` and `Math.PI` as `sin()` and `pi` respectively).
 
-If you want to provide some custom functions and constants, or override some of the standard ones, you can make your own library object with those properties (note that libraries must return valid javascript as a string in order to work properly).
+If you want to provide some custom functions and constants, or override some of the standard ones, you can define your own library object with those properties. Library functions and constants should just be JS functions and numbers respectively.
 
-**WARNING:** Make sure not to expose any sensitive or unsafe behavior in custom libraries.
+**WARNING:** Make sure not to expose any sensitive or unsafe data/behavior in custom libraries.
 
 Typescript developers can also take advantage of the provided `Library` interface to ensure the library complies with the standard.
 
@@ -52,11 +52,11 @@ import { Library, standard as std } from 'verbena/lib';
 let customLib: Library = {
     functions: {
         ...std.functions,
-        double: (x) => `(2*${x})`,
-        square: (x) => `Math.pow(${x}, 2)`
+        double: (x) => 2*x,
+        square: (x) => Math.pow(x, 2)
     },
     constants: {
-        root: 'Math.SQRT2'
+        root: Math.SQRT2
     }
 }
 
