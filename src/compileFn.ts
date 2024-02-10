@@ -36,19 +36,18 @@ class StandardExprHandler {
                 return lexeme;
             case TokenType.CONSTANT:
                 if (!Object.hasOwn(this.lib.constants, lexeme)) throw new Error('undefined constant ' + lexeme);
-                return this.lib.constants[lexeme];
+                return "lib.constants." + lexeme;
         }
     }
 
     handleFnCall(node: AST.FnCall): string {
         let fnLexeme = node.ident.lexeme;
         if (!Object.hasOwn(this.lib.functions, fnLexeme)) throw Error('undefined function ' + fnLexeme);
-        let fn = this.lib.functions[fnLexeme];
-        if ((fn.length != 0) && (fn.length != node.args.length)) {
+        if ((this.lib.functions[fnLexeme].length != 0) && (this.lib.functions[fnLexeme].length != node.args.length)) {
             throw Error('unexpected number of function arguments');
         }
         let argString = node.args.map((e) => { return this.compileExpr(e) }).join();
-        return fn(argString);
+        return "lib.functions." + fnLexeme + "(" + argString + ")";
     }
 
     handleGrouping(node: AST.Grouping): string {
@@ -95,7 +94,7 @@ export function compileFn(decl: AST.FnDecl, lib: Library = standard): vbFunction
         fnBody = 'if(' + condition + '){' + fnBody + '}else{return undefined;}'
     }
 
-    let fn = new Function(...paramList, fnBody) as vbFunction;
+    let fn = new Function("lib", ...paramList, fnBody).bind(null, lib) as vbFunction;
     Object.defineProperties(fn, {
         name: {
             value: decl.ident.lexeme,
@@ -110,7 +109,12 @@ export function compileFn(decl: AST.FnDecl, lib: Library = standard): vbFunction
         paramList: {
             value: paramList,
             writable: false,
-            enumerable: false,
+            enumerable: false
+        },
+        body: {
+            value: fnBody,
+            writable: false,
+            enumerable: false
         }
     });
 

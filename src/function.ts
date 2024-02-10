@@ -10,6 +10,7 @@ export interface vbFunction {
     (...x: number[]): number;
     ast: AST.FnDecl;
     paramList: string[];
+    body: string;
 }
 
 type FnOpts = {

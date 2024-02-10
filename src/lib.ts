@@ -1,40 +1,40 @@
 export interface Library {
-    functions: { [key: string]: (...args: any[]) => string },
-    constants: { [key: string]: string }
+    functions: { [key: string]: (...args: number[]) => number },
+    constants: { [key: string]: number }
 }
 
 export const standard: Library = {
     functions: {
-        abs: (x) => 'Math.abs(' + x + ')',
-        acos: (x) => 'Math.acos(' + x + ')',
-        acosh: (x) => 'Math.acosh(' + x + ')',
-        asin: (x) => 'Math.asin(' + x + ')',
-        asinh: (x) => 'Math.asinh(' + x + ')',
-        atan: (x) => 'Math.atan(' + x + ')',
-        atanh: (x) => 'Math.atanh(' + x + ')',
-        cbrt: (x) => 'Math.cbrt(' + x + ')',
-        ceil: (x) => 'Math.ceil(' + x + ')',
-        cos: (x) => 'Math.cos(' + x + ')',
-        cosh: (x) => 'Math.cosh(' + x + ')',
-        exp: (x) => 'Math.exp(' + x + ')',
-        floor: (x) => 'Math.floor(' + x + ')',
-        hypot: (...x) => 'Math.hypot(' + x.join() + ')',
-        //log: (b, x) => 'Math.log(' + x + ') / Math.log(' + b + ')',
-        ln: (x) => 'Math.log(' + x + ')',
-        max: (x) => 'Math.max(' + x + ')',
-        min: (x) => 'Math.min(' + x + ')',
-        pow: (x) => 'Math.pow(' + x + ')',
-        random: () => 'Math.random()',
-        round: (x) => 'Math.round(' + x + ')',
-        sign: (x) => 'Math.sign(' + x + ')',
-        sin: (x) => 'Math.sin(' + x + ')',
-        sinh: (x) => 'Math.sinh(' + x + ')',
-        sqrt: (x) => 'Math.sqrt(' + x + ')',
-        tan: (x) => 'Math.tan(' + x + ')',
-        tanh: (x) => 'Math.tanh(' + x + ')'
+        abs: Math.abs,
+        acos: Math.acos,
+        acosh: Math.acosh,
+        asin: Math.asin,
+        asinh: Math.asinh,
+        atan: Math.atan,
+        atanh: Math.atanh,
+        cbrt: Math.cbrt,
+        ceil: Math.ceil,
+        cos: Math.cos,
+        cosh: Math.cosh,
+        exp: Math.exp,
+        floor: Math.floor,
+        hypot: Math.hypot,
+        //log: (b, x) => Math.log(x) / Math.log(b),
+        ln: Math.log,
+        max: Math.max,
+        min: Math.min,
+        pow: Math.pow,
+        random: Math.random,
+        round: Math.round,
+        sign: Math.sign,
+        sin: Math.sin,
+        sinh: Math.sinh,
+        sqrt: Math.sqrt,
+        tan: Math.tan,
+        tanh: Math.tanh
     },
     constants: {
-        pi: 'Math.PI',
-        e: 'Math.E'
+        pi: Math.PI,
+        e: Math.E
     }
 }
