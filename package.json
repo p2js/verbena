@@ -3,7 +3,7 @@
   "version": "0.2.0",
   "description": "Math function/expression library that transcompiles to native code",
   "author": "Alfio (https://github.com/p2js)",
-  "license": "MIT",
+  "license": "ISC",
   "main": "index.js",
   "files": [
     "lib",
@@ -22,7 +22,8 @@
     }
   },
   "scripts": {
-    "build": "node esbuild.mjs && tsc -b ./tsconfig.types.json",
+    "build": "node esbuild.mjs",
+    "postbuild": "tsc -b ./tsconfig.types.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
