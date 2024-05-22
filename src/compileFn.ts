@@ -83,7 +83,7 @@ class StandardExprHandler {
     }
 }
 
-export function compileFn(decl: AST.FnDecl, lib: Library = standard): vbFunction {
+export function compileFn(decl: AST.FnDecl, lib: Library = standard): vbFunction<number> {
     let paramList = decl.params.map(token => token.lexeme);
 
     let handler = new StandardExprHandler(lib, paramList);
@@ -95,7 +95,7 @@ export function compileFn(decl: AST.FnDecl, lib: Library = standard): vbFunction
         fnBody = 'if(' + condition + '){' + fnBody + '}else{return undefined;}'
     }
 
-    let fn = new Function("lib", ...paramList, fnBody).bind(null, lib) as vbFunction;
+    let fn = new Function("lib", ...paramList, fnBody).bind(null, lib) as vbFunction<number>;
     Object.defineProperties(fn, {
         name: {
             value: decl.ident.lexeme,
