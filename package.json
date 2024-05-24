@@ -1,13 +1,14 @@
 {
   "name": "verbena",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Math function/expression library that transcompiles to native code",
   "author": "Alfio (https://github.com/p2js)",
   "license": "ISC",
   "main": "index.js",
   "files": [
     "lib",
-    "README.md"
+    "README.md",
+    "CHANGELOG.md"
   ],
   "exports": {
     ".": {

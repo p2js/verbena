@@ -39,7 +39,7 @@ If you want to provide some custom functions and constants, or override some of 
 
 **WARNING:** Make sure not to expose any sensitive or unsafe data/behavior in custom libraries.
 
-Typescript developers can also take advantage of the provided `Library` interface to ensure the library complies with the standard.
+Typescript developers can also take advantage of the provided `Library<T>` interface to ensure the library complies with the standard.
 
 ```ts
 // Custom library example (in typescript)
@@ -49,7 +49,7 @@ Typescript developers can also take advantage of the provided `Library` interfac
 import * as vb from 'verbena';
 import { Library, standard as std } from 'verbena/lib';
 
-let customLib: Library = {
+let customLib: Library<number> = {
     functions: {
         ...std.functions,
         double: (x) => 2*x,
@@ -61,6 +61,12 @@ let customLib: Library = {
 }
 
 let customLibFn = vb.Function("f(x)=double(root*x)", { lib: customLib });
+```
+
+Library functions can have variants (`f_n(x)`) by appending an underscore to the function name, and an additional argument to the function. Ensure a default value is provided. For example, the `standard` library defines `log_b(x)` like so:
+
+```ts
+        log_: (x, b = 10) => Math.log(x) / Math.log(b),
 ```
 
 ### Custom components
