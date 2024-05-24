@@ -65,10 +65,8 @@ class StandardExprHandler {
         let fn = this.reservedFunctions.find(fn => fn.name == fnLexeme);
         if (!fn) throw Error('undefined function ' + fnLexeme);
 
-        let fnArgCount = fn.hasVariants ? fn.argCount - 1 : fn.argCount;
-
-        if (fnArgCount != 0 && fnArgCount != node.args.length) {
-            throw Error('unexpected number of function arguments');
+        if ((fn.argCount != 0) && (fn.argCount != node.args.length)) {
+            throw Error(`unexpected number of function arguments: expected ${fn.argCount}, found ${node.args.length}`);
         }
 
         if (fn.hasVariants) {
