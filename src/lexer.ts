@@ -12,7 +12,8 @@ function isLetter(c: string) {
 
 export function scan(source: string, lib: Library = standard): Token[] {
     let reservedConstants = Object.keys(lib.constants);
-    let reservedFunctions = Object.keys(lib.functions);
+    //strip underscores from reserved function names
+    let reservedFunctions = Object.keys(lib.functions).map(functionName => functionName.endsWith('_') ? functionName.slice(0, -1) : functionName);
 
     let tokens: Token[] = [];
 
@@ -62,6 +63,8 @@ export function scan(source: string, lib: Library = standard): Token[] {
             case '<': addToken(match('=') ? TokenType.LESS_EQUAL : TokenType.LESS); break;
             //comma (fn args)
             case ',': addToken(TokenType.COMMA); break;
+            //underscore (fn variants)
+            case '_': addToken(TokenType.UNDERSCORE); break;
             //chars to ignore
             case ' ':
             case '\r':
@@ -101,7 +104,7 @@ export function scan(source: string, lib: Library = standard): Token[] {
                     }
                     break;
                 }
-                throw Error("Unexpected character " + char);
+                throw Error('Unexpected character ' + char);
         }
     };
 

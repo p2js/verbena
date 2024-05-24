@@ -4,7 +4,27 @@ import { standard, Library } from './lib';
 import { vbFunction } from './function';
 
 class StandardExprHandler {
-    constructor(public lib: Library = standard, public paramList: string[]) { }
+    public reservedConstants: string[];
+    public reservedFunctions: {
+        name: string,
+        hasVariants: boolean,
+        argCount: number
+    }[];
+
+    constructor(lib: Library = standard, public paramList: string[]) {
+        this.reservedConstants = Object.keys(lib.constants);
+        this.reservedFunctions = Object.entries(lib.functions).map(([fName, fn]) => {
+            let hasVariants = fName.endsWith('_');
+            let name = hasVariants ? fName.slice(0, -1) : fName;
+            let argCount = fn.length;
+
+            return {
+                name,
+                hasVariants,
+                argCount
+            };
+        });
+    }
 
     compileExpr(node: AST.Expr) {
         switch (true) {
@@ -35,19 +55,32 @@ class StandardExprHandler {
             case TokenType.NUMBER:
                 return lexeme;
             case TokenType.CONSTANT:
-                if (!Object.hasOwn(this.lib.constants, lexeme)) throw new Error('undefined constant ' + lexeme);
-                return "lib.constants." + lexeme;
+                if (!this.reservedConstants.includes(lexeme)) throw new Error('undefined constant ' + lexeme);
+                return 'lib.constants.' + lexeme;
         }
     }
 
     handleFnCall(node: AST.FnCall): string {
         let fnLexeme = node.ident.lexeme;
-        if (!Object.hasOwn(this.lib.functions, fnLexeme)) throw Error('undefined function ' + fnLexeme);
-        if ((this.lib.functions[fnLexeme].length != 0) && (this.lib.functions[fnLexeme].length != node.args.length)) {
+        let fn = this.reservedFunctions.find(fn => fn.name == fnLexeme);
+        if (!fn) throw Error('undefined function ' + fnLexeme);
+
+        let fnArgCount = fn.hasVariants ? fn.argCount - 1 : fn.argCount;
+
+        if (fnArgCount != 0 && fnArgCount != node.args.length) {
             throw Error('unexpected number of function arguments');
         }
+
+        if (fn.hasVariants) {
+            fnLexeme += '_';
+        } else if (node.variant != null) {
+            throw Error(`function '${fnLexeme}' does not have variants`);
+        }
+
         let argString = node.args.map((e) => { return this.compileExpr(e) }).join();
-        return "lib.functions." + fnLexeme + "(" + argString + ")";
+        if (node.variant != null) argString += "," + this.compileExpr(node.variant);
+
+        return 'lib.functions.' + fnLexeme + '(' + argString + ')';
     }
 
     handleGrouping(node: AST.Grouping): string {
@@ -55,7 +88,7 @@ class StandardExprHandler {
     }
 
     handleAbsGrouping(node: AST.AbsGrouping): string {
-        let absFn = this.lib.functions.abs ? 'lib.functions.abs(' : 'Math.abs(';
+        let absFn = this.reservedFunctions.find(f => f.name == 'abs') ? 'lib.functions.abs(' : 'Math.abs(';
         return absFn + this.compileExpr(node.inner) + ')';
     }
 
@@ -95,7 +128,7 @@ export function compileFn(decl: AST.FnDecl, lib: Library = standard): vbFunction
         fnBody = 'if(' + condition + '){' + fnBody + '}else{return undefined;}'
     }
 
-    let fn = new Function("lib", ...paramList, fnBody).bind(null, lib) as vbFunction<number>;
+    let fn = new Function('lib', ...paramList, fnBody).bind(null, lib) as vbFunction<number>;
     Object.defineProperties(fn, {
         name: {
             value: decl.ident.lexeme,

@@ -23,7 +23,7 @@ export class Literal extends Expr {
 }
 
 export class FnCall extends Expr {
-    constructor(public ident: Token, public args: Expr[]) { super(); }
+    constructor(public ident: Token, public variant: Expr, public args: Expr[]) { super(); }
 }
 
 export class Unary extends Expr {

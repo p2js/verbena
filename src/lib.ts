@@ -19,7 +19,7 @@ export const standard: Library = {
         exp: Math.exp,
         floor: Math.floor,
         hypot: Math.hypot,
-        //log: (b, x) => Math.log(x) / Math.log(b),
+        log_: (x, b = 10) => Math.log(x) / Math.log(b),
         ln: Math.log,
         max: Math.max,
         min: Math.min,

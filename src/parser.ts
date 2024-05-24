@@ -6,7 +6,7 @@ The ideal function definition grammar could be defined like so:
 
 fnDefinition -> IDENTIFIER "(" IDENTIFIER ("," IDENTIFIER)* ")" "=" expression clause?
 
-      clause -> "{" logicalExpr (',' logicalExpr)* "}"
+      clause -> "{" logicalExpr ("," logicalExpr)* "}"
  logicalExpr -> expression ((">" | ">=" | "<" | "<" | "=") expression)+
 
   expression -> term
@@ -18,7 +18,7 @@ fnDefinition -> IDENTIFIER "(" IDENTIFIER ("," IDENTIFIER)* ")" "=" expression c
        group -> grouping | absGrouping
     grouping -> "(" expression ")"
  absGrouping -> "|" expression "|"
-           fn -> RESERVED_FUNCTION "(" expression (',' expression)* ")"
+           fn -> RESERVED_FUNCTION ("_" primary)? "(" expression ("," expression)* ")"
 
 However, this grammar is ambiguous when you combine 
 absolute value groupings with implicit multiplication.
@@ -105,7 +105,7 @@ export function parse(tokenStream: Token[]) {
         }
 
         let nextLexeme = peek()?.lexeme
-        if (nextLexeme) throw new Error("Unexpected token " + nextLexeme);
+        if (nextLexeme) throw new Error('Unexpected token ' + nextLexeme);
 
         return new AST.FnDecl(ident, params, body, clauses);
     }
@@ -114,7 +114,7 @@ export function parse(tokenStream: Token[]) {
         let left = expression();
 
         if (!match(TokenType.GREATER, TokenType.GREATER_EQUAL, TokenType.LESS, TokenType.LESS_EQUAL, TokenType.EQUAL)) {
-            throw Error("A function domain clause must have at least one condition");
+            throw Error('A function domain clause must have at least one condition');
         }
 
         do {
@@ -165,7 +165,7 @@ export function parse(tokenStream: Token[]) {
                 case TokenType.PAREN_L:
                 case TokenType.FUNCTION:
                     currentToken--;
-                    if (absStack[absStack.length - 1] && (previous().type == TokenType.PIPE)) throw new Error("Implicit multiplication with nested absolute value is not allowed, try inserting a * symbol");
+                    if (absStack[absStack.length - 1] && (previous().type == TokenType.PIPE)) throw new Error('Implicit multiplication with nested absolute value is not allowed, try inserting a * symbol');
                     left = new AST.Binary(left, new Token(TokenType.STAR, '*'), exponent());
                     break;
             }
@@ -231,6 +231,10 @@ export function parse(tokenStream: Token[]) {
         }
         if (match(TokenType.FUNCTION)) {
             let ident = previous();
+            let variant: AST.Expr = null;
+            if (match(TokenType.UNDERSCORE)) {
+                variant = primary();
+            }
             let args: AST.Expr[] = [];
             expect(TokenType.PAREN_L, 'expected \'(\' after function');
             if (!check(TokenType.PAREN_R)) {
@@ -242,15 +246,15 @@ export function parse(tokenStream: Token[]) {
             }
             expect(TokenType.PAREN_R, 'expected \')\' after function arguments');
 
-            return new AST.FnCall(ident, args);
+            return new AST.FnCall(ident, variant, args);
         }
 
         //unexpected token
         let token = peek()?.lexeme;
         if (token) {
-            throw Error("Unexpected token " + token);
+            throw Error('Unexpected token ' + token);
         } else {
-            throw Error("Unexpected end of input");
+            throw Error('Unexpected end of input');
         }
 
     }

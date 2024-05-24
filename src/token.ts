@@ -20,6 +20,8 @@ export enum TokenType {
     LESS_EQUAL,
     //comma (fn args)
     COMMA,
+    //underscore (fn variants)
+    UNDERSCORE,
     //literal
     NUMBER,
     FUNCTION,
