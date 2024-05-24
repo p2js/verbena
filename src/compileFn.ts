@@ -11,7 +11,7 @@ class StandardExprHandler {
         argCount: number
     }[];
 
-    constructor(lib: Library = standard, public paramList: string[]) {
+    constructor(lib: Library<number> = standard, public paramList: string[]) {
         this.reservedConstants = Object.keys(lib.constants);
         this.reservedFunctions = Object.entries(lib.functions).map(([fName, fn]) => {
             let hasVariants = fName.endsWith('_');
@@ -116,7 +116,7 @@ class StandardExprHandler {
     }
 }
 
-export function compileFn(decl: AST.FnDecl, lib: Library = standard): vbFunction<number> {
+export function compileFn(decl: AST.FnDecl, lib: Library<number> = standard): vbFunction<number> {
     let paramList = decl.params.map(token => token.lexeme);
 
     let handler = new StandardExprHandler(lib, paramList);

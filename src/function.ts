@@ -14,10 +14,10 @@ export interface vbFunction<T> {
 }
 
 type FnOpts<T> = {
-    lib: Library,
-    scanner: (source: string, lib?: Library) => Token[],
+    lib: Library<T>,
+    scanner: (source: string, lib?: Library<T>) => Token[],
     parser: (tokenStream: Token[]) => AST.FnDecl,
-    compiler: (decl: AST.FnDecl, lib?: Library) => vbFunction<T>
+    compiler: (decl: AST.FnDecl, lib?: Library<T>) => vbFunction<T>
 }
 
 export function Function(source: string, opts: Partial<FnOpts<number>> = {}): vbFunction<number> {

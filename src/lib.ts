@@ -1,9 +1,9 @@
-export interface Library {
-    functions: { [key: string]: (...args: number[]) => number },
-    constants: { [key: string]: number }
+export interface Library<T> {
+    functions: { [key: string]: (...args: T[]) => T },
+    constants: { [key: string]: T }
 }
 
-export const standard: Library = {
+export const standard: Library<number> = {
     functions: {
         abs: Math.abs,
         acos: Math.acos,
