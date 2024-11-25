@@ -12,6 +12,7 @@ export enum TokenType {
     STAR,
     SLASH,
     CARAT,
+    BANG,
     //equality or comparison
     EQUAL,
     GREATER,

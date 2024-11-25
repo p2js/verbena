@@ -91,6 +91,13 @@ class StandardExprHandler {
     }
 
     handleUnary(node: AST.Unary): string {
+        if (node.operator.type == TokenType.BANG) {
+            let factorialFn = this.reservedFunctions.find(f => f.name == 'fact') && 'lib.functions.fact(';
+            if (!factorialFn) {
+                throw new Error('Factorial operator behavior is undefined');
+            }
+            return factorialFn + this.compileExpr(node.inner) + ')';
+        }
         return node.operator.lexeme + this.compileExpr(node.inner);
     }
 

@@ -13,7 +13,8 @@ fnDefinition -> IDENTIFIER "(" IDENTIFIER ("," IDENTIFIER)* ")" "=" expression c
         term -> factor (("+" | "-") factor)*
       factor -> exponent ((("*"? | "/") exponent)*
     exponent -> (unary ^)* unary;
-       unary -> ("-" unary) | primary;
+    negative -> ("-" negative) | factorial
+   factorial -> (factorial "!") | primary
      primary -> IDENTIFIER | NUMBER | RESERVED_CONSTANT | group | fn
        group -> grouping | absGrouping
     grouping -> "(" expression ")"
@@ -175,7 +176,7 @@ export function parse(tokenStream: Token[]) {
     }
 
     function exponent() {
-        let left = unary();
+        let left = negative();
         if (match(TokenType.CARAT)) {
             absStack.push(false);
             let operator = previous();
@@ -186,14 +187,33 @@ export function parse(tokenStream: Token[]) {
         return left;
     }
 
-    function unary() {
+    // function unary() {
+    //     if (match(TokenType.MINUS)) {
+    //         let operator = previous();
+    //         let expr = unary();
+
+    //         return new AST.Unary(operator, expr);
+    //     }
+    //     return primary();
+    // }
+
+    function negative() {
         if (match(TokenType.MINUS)) {
             let operator = previous();
-            let expr = unary();
+            let expr = negative();
 
             return new AST.Unary(operator, expr);
         }
-        return primary();
+        return factorial();
+    }
+
+    function factorial() {
+        let expr = primary();
+        while (match(TokenType.BANG)) {
+            let operator = previous();
+            expr = new AST.Unary(operator, expr);
+        }
+        return expr;
     }
 
     function primary(): AST.Expr {

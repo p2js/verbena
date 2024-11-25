@@ -1,9 +1,18 @@
+type BinaryOperator<T> = (left: T, right: T) => T;
+type UnaryOperator<T> = (x: T) => T;
+
 export interface Library<T> {
+    operations: Partial<
+        Record<'add' | 'sub' | 'mul' | 'div' | 'pow' | 'mod', BinaryOperator<T>>
+        &
+        Record<'abs' | 'neg' | 'fac', UnaryOperator<T>>
+    >,
     functions: { [key: string]: (...args: T[]) => T },
     constants: { [key: string]: T }
 }
 
 export const standard: Library<number> = {
+    operations: {},
     functions: {
         abs: Math.abs,
         acos: Math.acos,
@@ -17,6 +26,9 @@ export const standard: Library<number> = {
         cos: Math.cos,
         cosh: Math.cosh,
         exp: Math.exp,
+        fact: function factorial(x) {
+            return x < 2 ? x : x * factorial(x - 1);
+        },
         floor: Math.floor,
         hypot: Math.hypot,
         log_: (x, b = 10) => Math.log(x) / Math.log(b),
@@ -36,5 +48,5 @@ export const standard: Library<number> = {
     constants: {
         pi: Math.PI,
         e: Math.E
-    }
+    },
 }

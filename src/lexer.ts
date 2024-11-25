@@ -57,6 +57,7 @@ export function scan(source: string, lib: Library<number> = standard): Token[] {
             case '*': addToken(TokenType.STAR); break;
             case '/': addToken(TokenType.SLASH); break;
             case '^': addToken(TokenType.CARAT); break;
+            case '!': addToken(TokenType.BANG); break;
             //equality, comparison
             case '=': addToken(TokenType.EQUAL); break;
             case '>': addToken(match('=') ? TokenType.GREATER_EQUAL : TokenType.GREATER); break;
