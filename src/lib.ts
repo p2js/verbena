@@ -2,7 +2,7 @@ type BinaryOperator<T> = (left: T, right: T) => T;
 type UnaryOperator<T> = (x: T) => T;
 
 export interface Library<T> {
-    operations: Partial<
+    operations?: Partial<
         Record<'add' | 'sub' | 'mul' | 'div' | 'pow' | 'mod', BinaryOperator<T>>
         &
         Record<'abs' | 'neg' | 'fac', UnaryOperator<T>>
@@ -12,7 +12,6 @@ export interface Library<T> {
 }
 
 export const standard: Library<number> = {
-    operations: {},
     functions: {
         abs: Math.abs,
         acos: Math.acos,
@@ -35,6 +34,8 @@ export const standard: Library<number> = {
         ln: Math.log,
         max: Math.max,
         min: Math.min,
+        nCr: (n, r) => standard.functions.fact(n) / (standard.functions.fact(r) * standard.functions.fact(n - r)),
+        nPr: (n, r) => standard.functions.fact(n) / standard.functions.fact(n - r),
         pow: Math.pow,
         random: Math.random,
         round: Math.round,

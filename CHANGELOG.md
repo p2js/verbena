@@ -2,7 +2,10 @@
 
 ## 0.4.0 (WIP)
 
-- Added new operators: factorial (`x!`) 
+- Added new operators: factorial (`x!`)
+- Added new standard library functions
+    - `fact` for computing factorials (alongside the new postfix `x!`)
+    - `nCr` and `nPr` for combinations and permutations
 
 TODO
 
@@ -15,17 +18,11 @@ TODO
         - `abs` describes absolute value `|x|`
         - `fac` describes the factorial `x!`
     - Acts as a method to "overload" JS' default operator behaviour
-        - Can be left undefined to compile to basic JS numerical operators
-        - Like Verbena's `standard`, porting a custom library to 0.4.0 simply involves appending `operations: {}`
+        - Either the whole object, or individual operators, can be left undefined to compile to basic JS numerical operators
 
 - ! and modulo (`n % m`)
     - Behaviour can be described by `lib.operators.fact` and `lib.operators.mod` respectively
     - Factorial will fall back to `lib.functions.fact` as a default
-
-- Added new standard library functions
-    - `fact` and `mod` for factorial and modulo
-    - `nCr` and `nPr` for combinations and permutations
-
 
 
 ## 0.3.0
