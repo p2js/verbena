@@ -4,6 +4,7 @@ import { standard, Library } from './lib';
 import { vbFunction } from './function';
 
 class StandardExprHandler {
+    public operations: string[];
     public reservedConstants: string[];
     public reservedFunctions: {
         name: string,
@@ -12,8 +13,9 @@ class StandardExprHandler {
     }[];
 
     constructor(lib: Library<number> = standard, public paramList: string[]) {
-        this.reservedConstants = Object.keys(lib.constants);
-        this.reservedFunctions = Object.entries(lib.functions).map(([fName, fn]) => {
+        this.operations = Object.keys(lib.operations || {});
+        this.reservedConstants = Object.keys(lib.constants || {});
+        this.reservedFunctions = Object.entries(lib.functions || {}).map(([fName, fn]) => {
             let hasVariants = fName.endsWith('_');
             let name = hasVariants ? fName.slice(0, -1) : fName;
             let argCount = fn.length;
@@ -91,19 +93,57 @@ class StandardExprHandler {
     }
 
     handleUnary(node: AST.Unary): string {
-        if (node.operator.type == TokenType.BANG) {
-            let factorialFn = this.reservedFunctions.find(f => f.name == 'fact') && 'lib.functions.fact(';
-            if (!factorialFn) {
-                throw new Error('Factorial operator behavior is undefined');
-            }
-            return factorialFn + this.compileExpr(node.inner) + ')';
+        let inner = this.compileExpr(node.inner);
+        switch (node.operator.type) {
+            case TokenType.BANG:
+                let factorialOp = this.operations.find(op => op == 'fac')
+                    ? 'lib.operations.fac('
+                    : this.reservedFunctions.find(f => f.name == 'fact') && 'lib.functions.fact(';
+                if (!factorialOp) {
+                    throw new Error('Factorial operator behavior is undefined');
+                }
+                return factorialOp + inner + ')';
+            case TokenType.MINUS:
+                if (this.operations.find(op => op == 'neg')) {
+                    return 'lib.operations.neg(' + inner + ')';
+                }
+                break;
         }
-        return node.operator.lexeme + this.compileExpr(node.inner);
+        return node.operator.lexeme + inner;
     }
 
     handleBinary(node: AST.Binary): string {
+        let left = this.compileExpr(node.left);
+        let right = this.compileExpr(node.right);
+
+        let operation;
+        switch (node.operator.type) {
+            case TokenType.PLUS:
+                operation = 'add';
+                break;
+            case TokenType.MINUS:
+                operation = 'sub';
+                break;
+            case TokenType.STAR:
+                operation = 'mul';
+                break;
+            case TokenType.SLASH:
+                operation = 'div';
+                break;
+            case TokenType.CARAT:
+                operation = 'pow';
+                break;
+            case TokenType.PERCENT:
+                operation = 'mod';
+                break;
+        }
+
+        if (this.operations.find(op => op == operation)) {
+            return 'lib.operations.' + operation + '(' + left + ',' + right + ')';
+        }
+
         let operator = node.operator.type == TokenType.CARAT ? '**' : node.operator.lexeme;
-        return this.compileExpr(node.left) + operator + this.compileExpr(node.right);
+        return left + operator + right;
     }
 
     handleLogicalExpr(node: AST.LogicalExpr): string {

@@ -7,8 +7,8 @@ export interface Library<T> {
         &
         Record<'abs' | 'neg' | 'fac', UnaryOperator<T>>
     >,
-    functions: { [key: string]: (...args: T[]) => T },
-    constants: { [key: string]: T }
+    functions?: { [key: string]: (...args: T[]) => T },
+    constants?: { [key: string]: T }
 }
 
 export const standard: Library<number> = {

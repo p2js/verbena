@@ -11,9 +11,9 @@ function isLetter(c: string) {
 }
 
 export function scan(source: string, lib: Library<number> = standard): Token[] {
-    let reservedConstants = Object.keys(lib.constants);
+    let reservedConstants = Object.keys(lib.constants || {});
     //strip underscores from reserved function names
-    let reservedFunctions = Object.keys(lib.functions).map(functionName => functionName.endsWith('_') ? functionName.slice(0, -1) : functionName);
+    let reservedFunctions = Object.keys(lib.functions || {}).map(functionName => functionName.endsWith('_') ? functionName.slice(0, -1) : functionName);
 
     let tokens: Token[] = [];
 

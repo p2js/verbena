@@ -37,19 +37,25 @@ Function compilation will use the built-in `standard` library by default. This l
 
 If you want to provide some custom functions and constants, or override some of the standard ones, you can define your own library object with those properties. Library functions and constants should just be JS functions and numbers respectively.
 
+As of 0.4.0, You can also override the default behaviour of operators with functions (see `CHANGELOG.MD`). 
+
 **WARNING:** Make sure not to expose any sensitive or unsafe data/behavior in custom libraries.
 
 Typescript developers can also take advantage of the provided `Library<T>` interface to ensure the library complies with the standard.
 
 ```ts
 // Custom library example (in typescript)
-// exposes all the standard functions, plus custom "double" and "square" functions
+// Changes addition to also multiply the result by 3.
+// Also exposes all the standard functions, plus custom "double" and "square" functions
 // as well as just a single constant for the square root of 2
 
 import * as vb from 'verbena';
 import { Library, standard as std } from 'verbena/lib';
 
 let customLib: Library<number> = {
+    operations: {
+        add: (left, right) => 3 * (left + right)
+    },
     functions: {
         ...std.functions,
         double: (x) => 2*x,
@@ -60,7 +66,7 @@ let customLib: Library<number> = {
     }
 }
 
-let customLibFn = vb.Function("f(x)=double(root*x)", { lib: customLib });
+let customLibFn = vb.Function("f(x)=double(root+x)", { lib: customLib });
 ```
 
 Library functions can have variants (`f_n(x)`) by appending an underscore to the function name, and an additional argument to the function. Ensure a default value is provided. For example, the `standard` library defines `log_b(x)` like so:

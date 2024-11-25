@@ -1,16 +1,6 @@
 # Changelog
 
-## 0.4.0 (WIP)
-
-- Added new operators: factorial (`x!`) and modulo (`n % m`)
-    - Factorial will refer to `lib.functions.fact`
-    - Behaviour can be described by `lib.operators.fact` and `lib.operators.mod` respectively
-
-- Added new standard library functions
-    - `fact` for computing factorials (alongside the new postfix `x!`)
-    - `nCr` and `nPr` for combinations and permutations
-
-TODO
+## 0.4.0
 
 - Added support for custom operation definition in libraries
     - Defined in `lib.operators`:
@@ -22,6 +12,19 @@ TODO
         - `fac` describes the factorial `x!`
     - Acts as a method to "overload" JS' default operator behaviour
         - Either the whole object, or individual operators, can be left undefined to compile to basic JS numerical operators
+
+- Added new operators: factorial (`x!`) and modulo (`x % y`)
+    - Behaviour can be described by `lib.operators.fact` and `lib.operators.mod` respectively
+    - Factorial will refer to `lib.functions.fact` otherwise
+
+- Added new standard library functions
+    - `fact` for computing factorials (alongside the new postfix `x!`)
+    - `nCr` and `nPr` for combinations and permutations
+
+- Made requirements for library definitions less strict
+    - Custom libraries no longer need to define any functions or constants
+        - The standard lexer and compiler have been modified to not error on this condition
+        - However, the compiler will emit an error if the factorial operator `x!` is used without a defined `fact` function, as JS does not have a standard factorial function. This may be undesirable behaviour (though it would just error as it did when it was an undefined token prior to this version).
 
 ## 0.3.0
 
