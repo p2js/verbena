@@ -11,7 +11,7 @@ fnDefinition -> IDENTIFIER "(" IDENTIFIER ("," IDENTIFIER)* ")" "=" expression c
 
   expression -> term
         term -> factor (("+" | "-") factor)*
-      factor -> exponent ((("*"? | "/") exponent)*
+      factor -> exponent ((("*"? | "/" | "%") exponent)*
     exponent -> (unary ^)* unary;
     negative -> ("-" negative) | factorial
    factorial -> (factorial "!") | primary
@@ -150,11 +150,12 @@ export function parse(tokenStream: Token[]) {
         //only match for PIPE if we are not in an abs at the current depth: match for star again otherwise (redundant)
         let matchForPipeToken = (absStack[absStack.length - 1] ? TokenType.STAR : TokenType.PIPE);
 
-        while (match(TokenType.STAR, TokenType.SLASH, TokenType.NUMBER, TokenType.IDENTIFIER, TokenType.CONSTANT, TokenType.PAREN_L, TokenType.FUNCTION, matchForPipeToken)) {
+        while (match(TokenType.STAR, TokenType.SLASH, TokenType.PERCENT, TokenType.NUMBER, TokenType.IDENTIFIER, TokenType.CONSTANT, TokenType.PAREN_L, TokenType.FUNCTION, matchForPipeToken)) {
             let token = previous();
             switch (token.type) {
                 case TokenType.STAR:
                 case TokenType.SLASH:
+                case TokenType.PERCENT:
                     absStack.push(false);
                     left = new AST.Binary(left, token, exponent());
                     absStack.pop();

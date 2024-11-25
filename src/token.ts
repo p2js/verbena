@@ -13,6 +13,7 @@ export enum TokenType {
     SLASH,
     CARAT,
     BANG,
+    PERCENT,
     //equality or comparison
     EQUAL,
     GREATER,
