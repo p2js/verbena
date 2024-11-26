@@ -15,7 +15,7 @@ You can install verbena using [npm](https://www.npmjs.org/package/verbena):
 npm install verbena
 ```
 
-Otherwise, you can build the library yourself by cloning into this repository, installing the required build dependencies with `npm i` and then running the build script with `npm run build`.
+Otherwise, you can build the library yourself by cloning into this repository and running `pnpm build`.
 
 Use the provided `Function` constructor to convert a source string to a native function:
 
@@ -30,6 +30,8 @@ fn(2, -1); // 8
 ## Extensibility
 
 Verbena is designed to be easily extended with custom features.
+
+See, for example, [verbena-complex](https://github.com/p2js/verbena-complex), an extension of verbena designed to work with complex numbers and functions.
 
 ### Custom libraries
 

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.1
+
+- Internal changes only:
+    - Library structure changed to not include separate source files for CJS and ESM imports.
+        - This should not affect normal usage of the library.
+        - Building now only takes place using `tsc`; ESBuild has been removed as a dev depedency.
+    - Non-null assertions added to `nCr` and `nPr` library functions to comply with typescript.
+
 ## 0.4.0
 
 - Added support for custom operation definition in libraries

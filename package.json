@@ -1,10 +1,10 @@
 {
   "name": "verbena",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Math function/expression library that transcompiles to native code",
   "author": "Alfio (https://github.com/p2js)",
   "license": "ISC",
-  "main": "index.js",
+  "main": "lib/index.js",
   "files": [
     "lib",
     "README.md",
@@ -13,18 +13,15 @@
   "exports": {
     ".": {
       "types": "./lib/types/index.d.ts",
-      "import": "./lib/esm/index.mjs",
-      "require": "./lib/cjs/index.js"
+      "default": "./lib/index.js"
     },
     "./*": {
       "types": "./lib/types/*.d.ts",
-      "import": "./lib/esm/*.mjs",
-      "require": "./lib/cjs/*.js"
+      "default": "./lib/*.js"
     }
   },
   "scripts": {
-    "build": "node esbuild.mjs",
-    "postbuild": "tsc -b ./tsconfig.types.json",
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -36,9 +33,5 @@
     "functions",
     "expressions",
     "mathjs"
-  ],
-  "devDependencies": {
-    "esbuild": "^0.20.0"
-  },
-  "packageManager": "pnpm@9.14.2+sha512.6e2baf77d06b9362294152c851c4f278ede37ab1eba3a55fda317a4a17b209f4dbb973fb250a77abc463a341fcb1f17f17cfa24091c4eb319cda0d9b84278387"
+  ]
 }

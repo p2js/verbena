@@ -1,14 +1,15 @@
 {
-    //This tsconfig.json file is used to generate the .d.ts files for the library.
     "compilerOptions": {
         "target": "ESNext",
+        "module": "NodeNext",
+        "moduleResolution": "nodenext",
         "removeComments": false,
         "lib": [
             "ESNext"
         ],
-        "outDir": "./lib/types",
+        "outDir": "./lib",
         "declaration": true,
-        "emitDeclarationOnly": true
+        "declarationDir": "./lib/types",
     },
     "include": [
         "src/**/*.ts"
