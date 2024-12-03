@@ -11,7 +11,7 @@
 ## 0.4.0
 
 - Added support for custom operation definition in libraries
-    - Defined in `lib.operators`:
+    - Defined in `lib.operations`:
         - `add`, `sub`, `mul` and `div` describe the 4 binary arithmetic operators `x + y`, `x - y`, `x * y`, `x / y`
         - `pow` describes exponentiation `x^y`
         - `mod` describes the modulo operator `x % y`
@@ -19,20 +19,20 @@
         - `abs` describes absolute value `|x|`
         - `fac` describes the factorial `x!`
     - Acts as a method to "overload" JS' default operator behaviour
-        - Either the whole object, or individual operators, can be left undefined to compile to basic JS numerical operators
+        - Any or all operations can be left undefined to compile to basic JS numerical operators
 
 - Added new operators: factorial (`x!`) and modulo (`x % y`)
-    - Behaviour can be described by `lib.operators.fact` and `lib.operators.mod` respectively
+    - Behaviour can be described by `lib.operations.fac` and `lib.operationd.mod` respectively
     - Factorial will refer to `lib.functions.fact` otherwise
 
 - Added new standard library functions
     - `fact` for computing factorials (alongside the new postfix `x!`)
     - `nCr` and `nPr` for combinations and permutations
 
-- Made requirements for library definitions less strict
+- Loosened requirements for library definitions
     - Custom libraries no longer need to define any functions or constants
         - The standard lexer and compiler have been modified to not error on this condition
-        - However, the compiler will emit an error if the factorial operator `x!` is used without a defined `fact` function, as JS does not have a standard factorial function. This may be undesirable behaviour (though it would just error as it did when it was an undefined token prior to this version).
+        - However, the compiler will emit an error if the factorial operator `x!` is used without a defined `fact` function, as JS does not have a standard factorial function. This may be undesirable behaviour (though this would not change from previous versions, where it would error due to being an undefined token).
 
 ## 0.3.0
 
